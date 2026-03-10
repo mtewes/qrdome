@@ -6,6 +6,8 @@ Test picamera2 and opencv to read QR codes
 from picamera2 import Picamera2
 import time
 import cv2
+import datetime
+from pathlib import Path
 
 import tm1637
 
@@ -28,28 +30,51 @@ picam2 = Picamera2()
 picam2.start()
 time.sleep(2)  # Wait for settings to take effect
 
+
+imgdir = Path('/home/mtewes/qrdome_images')
+imgdir.mkdir(exist_ok=True)
+
+def save_image(im, code):
+    # First we create a directory for today's date
+    today = datetime.date.today().isoformat()
+    d = imgdir / today
+    d.mkdir(exist_ok=True)
+    # Then we save the image with a timestamp
+    timestamp = datetime.datetime.now().strftime("%H-%M-%S-%f")
+    output_path = d / f'{timestamp}_code_{code.strip(" ")}.jpg'
+    cv2.imwrite(str(output_path), im)
+    print(f"Saved image to {output_path}")
+
+
 try:
+    i = 0
     while True:
+        i = (i + 1) % 10
+    
         # Capture frame-by-frame
         
         im = picam2.capture_array()
-        tm.show('    ')
+        print(im.shape)
+
+        tm.show('    ') # So that it blinks
 
         qcd = cv2.QRCodeDetector()
         retval, decoded_info, points, straight_qrcode = qcd.detectAndDecodeMulti(im)
         if retval:
-            #cv2.imwrite('output.jpg', im)
-            print(retval, decoded_info)
             try:
                 code = str(int(decoded_info[0]))
             except ValueError:
                 code = 'E   '
+
+            if i == 0: # We save that image
+                save_image(im, code)
+
+            print(retval, decoded_info)
+            
             tm.show(code)
 
         else:
-            print(im.shape)
             
-
             tm.show('----')
 
 
