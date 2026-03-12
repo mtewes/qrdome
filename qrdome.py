@@ -1,9 +1,18 @@
 """
 Test picamera2 and opencv to read QR codes
+
+Doc:
+https://www.raspberrypi.com/documentation/computers/camera_software.html#picamera2
+https://docs.opencv.org/3.4/de/dc3/classcv_1_1QRCodeDetector.html
+
+
+
+
 """
 
-
+from pprint import *
 from picamera2 import Picamera2
+
 import time
 import cv2
 import datetime
@@ -23,8 +32,12 @@ tm.show('S---')
 
 # Initialize Picamera2 and configure the camera
 picam2 = Picamera2()
+
+pprint(picam2.sensor_modes)
+
+preview_config = picam2.create_preview_configuration()
 #config = picam2.create_still_configuration()
-#picam2.configure(config)
+picam2.configure(preview_config)
 
 # Start the camera and capture
 picam2.start()
@@ -49,33 +62,47 @@ def save_image(im, code):
 try:
     i = 0
     while True:
-        i = (i + 1) % 10
+        i = i % 10
     
         # Capture frame-by-frame
         
         im = picam2.capture_array()
         print(im.shape)
 
-        tm.show('    ') # So that it blinks
+        tm.show('    ') # Clear display, so that it blinks
 
         qcd = cv2.QRCodeDetector()
-        retval, decoded_info, points, straight_qrcode = qcd.detectAndDecodeMulti(im)
-        if retval:
+        #retval, decoded_info, points, straight_qrcode = qcd.detectAndDecodeMulti(im)
+        #decoded_info = decoded_info[0] # We pick the first in case of multi
+        #if retval:
+        #    try:
+        #        code = str(int(decoded_info))
+        #    except ValueError:
+        #        code = 'E   '
+
+        data, points, straight_qrcode = qcd.detectAndDecode(im)
+        if data: # if this string is not empty...
             try:
-                code = str(int(decoded_info[0]))
+                code = str(int(data))
             except ValueError:
                 code = 'E   '
-
-            if i == 0: # We save that image
-                save_image(im, code)
-
-            print(retval, decoded_info)
             
+            print(data) 
             tm.show(code)
+
+            save_image(im, code)
 
         else:
             
             tm.show('----')
+
+            if i == 0: # We save that image
+                save_image(im, "N")
+
+        
+        i=i+1
+            
+            
 
 
 except KeyboardInterrupt:
