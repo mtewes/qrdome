@@ -45,6 +45,7 @@ import cv2
 import datetime
 from pathlib import Path
 
+import gpiozero
 import tm1637
 
 print("OpenCV version: ", cv2.__version__)
@@ -55,6 +56,10 @@ DIO = 5
 tm = tm1637.TM1637(clk=CLK, dio=DIO)
 tm.brightness(2)
 tm.show('S---')
+
+# Setup relay
+chan1 = gpiozero.DigitalOutputDevice(16) # GPIO 16
+chan2 = gpiozero.DigitalOutputDevice(26) # GPIO 26
 
 
 # Initialize Picamera2 and configure the camera
@@ -118,6 +123,17 @@ try:
             
             print(data) 
             tm.show(code)
+
+            if code == "42":
+                if chan1.value == 0:
+                    print("ON!")
+                    chan1.on()
+
+            if code == "8888":
+                if chan1.value == 1:
+                    print("OFF!")
+                    chan1.off()
+
 
             save_image(im, code)
 
