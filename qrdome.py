@@ -6,7 +6,34 @@ https://www.raspberrypi.com/documentation/computers/camera_software.html#picamer
 https://docs.opencv.org/3.4/de/dc3/classcv_1_1QRCodeDetector.html
 
 
-
+[{'bit_depth': 10,
+  'crop_limits': (16, 0, 2560, 1920),
+  'exposure_limits': (134, 4879289, 20000),
+  'format': SGBRG10_CSI2P,
+  'fps': 58.92,
+  'size': (640, 480),
+  'unpacked': 'SGBRG10'},
+ {'bit_depth': 10,
+  'crop_limits': (0, 0, 2592, 1944),
+  'exposure_limits': (86, 3066985, 20000),
+  'format': SGBRG10_CSI2P,
+  'fps': 46.34,
+  'size': (1296, 972),
+  'unpacked': 'SGBRG10'},
+ {'bit_depth': 10,
+  'crop_limits': (348, 434, 1928, 1080),
+  'exposure_limits': (110, 3066979, 20000),
+  'format': SGBRG10_CSI2P,
+  'fps': 32.81,
+  'size': (1920, 1080),
+  'unpacked': 'SGBRG10'},
+ {'bit_depth': 10,
+  'crop_limits': (0, 0, 2592, 1944),
+  'exposure_limits': (130, 3066985, 20000),
+  'format': SGBRG10_CSI2P,
+  'fps': 15.63,
+  'size': (2592, 1944),
+  'unpacked': 'SGBRG10'}]
 
 """
 
@@ -114,6 +141,3 @@ finally:
     cv2.destroyAllWindows()
     print("Done!")
 
-
-
-# Gives error: Library QUIRC is not linked. No decoding is performed. Take it to the OpenCV repository.
