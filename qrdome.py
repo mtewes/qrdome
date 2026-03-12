@@ -37,7 +37,7 @@ https://docs.opencv.org/3.4/de/dc3/classcv_1_1QRCodeDetector.html
 
 """
 
-from pprint import *
+#from pprint import *
 from picamera2 import Picamera2
 
 import time
@@ -60,11 +60,12 @@ tm.show('S---')
 # Initialize Picamera2 and configure the camera
 picam2 = Picamera2()
 
-pprint(picam2.sensor_modes)
+#pprint(picam2.sensor_modes)
 
-preview_config = picam2.create_preview_configuration()
+#preview_config = picam2.create_preview_configuration()
 #config = picam2.create_still_configuration()
-picam2.configure(preview_config)
+#picam2.configure(preview_config)
+picam2.configure()
 
 # Start the camera and capture
 picam2.start()
@@ -75,21 +76,22 @@ imgdir = Path('/home/mtewes/qrdome_images')
 imgdir.mkdir(exist_ok=True)
 
 def save_image(im, code):
-    # First we create a directory for today's date
-    today = datetime.date.today().isoformat()
-    d = imgdir / today
-    d.mkdir(exist_ok=True)
-    # Then we save the image with a timestamp
-    timestamp = datetime.datetime.now().strftime("%H-%M-%S-%f")
-    output_path = d / f'{timestamp}_code_{code.strip(" ")}.jpg'
-    cv2.imwrite(str(output_path), im)
-    print(f"Saved image to {output_path}")
+    if True:
+        # First we create a directory for today's date
+        today = datetime.date.today().isoformat()
+        d = imgdir / today
+        d.mkdir(exist_ok=True)
+        # Then we save the image with a timestamp
+        timestamp = datetime.datetime.now().strftime("%H-%M-%S-%f")
+        output_path = d / f'{timestamp}_code_{code.strip(" ")}.jpg'
+        cv2.imwrite(str(output_path), im)
+        print(f"Saved image to {output_path}")
 
 
 try:
     i = 0
     while True:
-        i = i % 10
+        i = i % 20
     
         # Capture frame-by-frame
         
